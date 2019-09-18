@@ -1,14 +1,17 @@
 import os 
 dir_path = os.path.dirname(os.path.realpath(__file__))
-filepath = os.path.join(dir_path,'files/photos.csv')
-print(filepath)
+filepathR = os.path.join(dir_path,'files/test.csv')
+filepathW = os.path.join(dir_path,'transforms/testNew.csv')
+print(filepathR)
 
 data = []
-with open(filepath) as fp:
-   line = fp.readline()
-   while line:
+with open(filepathR) as fpR, open(filepathW, "w") as fpW:
+    line = fpR.readline()
+    while line:
         #print(line)
-        data.append(line)
-        line = fp.readline()
+        split = line.split(",")
+        data.append(split)
+        fpW.write(line)
+        line = fpR.readline()
 
-print(len(data))
+#print((data))
