@@ -11,7 +11,7 @@ function featuresCSV(Fone, Ftwo, Fthree, Ffour) {
 
 let featuresData = [];
 
-loader.from.path(path.join(__dirname,"files/test.csv")).to.array(function (data) {
+loader.from.path(path.join(__dirname,"files/features.csv")).to.array(function (data) {
     for (var index = 0; index < data.length; index++) {
         featuresData.push(new featuresCSV(data[index][0], data[index][1], data[index][2], data[index][3]));
     }
