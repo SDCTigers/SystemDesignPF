@@ -10,9 +10,11 @@
     "clean": "rm dist/bundle.js",
     "build-dev": "webpack -d --mode development",
     "build-prod": "webpack -p --mode production",
+    "load": "node database/loader.js",
     "start": "node server/server.js"
   },
   "dependencies": {
+    "csv": "^0.3.7",
     "express": "^4.17.1",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
