@@ -1,9 +1,9 @@
 import os 
 dir_path = os.path.dirname(os.path.realpath(__file__))
-filepathRSt = os.path.join(dir_path,'files/styles.csv')
-filepathRSk = os.path.join(dir_path,'files/skus.csv')
-filepathRP = os.path.join(dir_path,'files/photos.csv')
-filepathW = os.path.join(dir_path,'transforms/stylesTransformed.csv')
+filepathRSt = os.path.join(dir_path,'files/product.csv')
+filepathRSk = os.path.join(dir_path,'files/styles.csv')
+filepathRP = os.path.join(dir_path,'files/features.csv')
+filepathW = os.path.join(dir_path,'transforms/productTransformed.csv')
 
 def stringifyArr(arr):
     if len(arr) == 0:
@@ -17,7 +17,6 @@ def stringifyArr(arr):
 
 def checkStyle(line):
     line = line[:-1]
-    line = line.replace("null","-1")
     return line
 
 currentSKUS = []
@@ -25,13 +24,13 @@ currentPhotos = []
 currentId = "1"
 
 with open(filepathRSt) as fpRSt, open(filepathRSk) as fpRSk, open(filepathRP) as fpRP, open(filepathW, "w") as fpW: #open the files to read and file to write to
-    lineSt = fpRSt.readline() #styles
-    lineSk = fpRSk.readline() #skus
-    lineP = fpRP.readline() #photos
-    fpW.write("id,productId,name,sale_price,original_price,default_style,skus,photos\n")
-    lineSt = fpRSt.readline() #styles
-    lineSk = fpRSk.readline() #skus
-    lineP = fpRP.readline() #photod
+    lineSt = fpRSt.readline() #product
+    lineSk = fpRSk.readline() #styles
+    lineP = fpRP.readline() #features
+    fpW.write("id,name,slogan,description,category,default_price,styles,features\n")
+    lineSt = fpRSt.readline() #product
+    lineSk = fpRSk.readline() #styles
+    lineP = fpRP.readline() #features
     # print(lineSt)
     # print(lineSk)
     # print(lineP)
@@ -40,20 +39,19 @@ with open(filepathRSt) as fpRSt, open(filepathRSk) as fpRSk, open(filepathRP) as
     while lineSt:
         splitSt = lineSt.split(",")
         currentId = splitSt[0]
-        while len(splitSk) > 1 and splitSk[1] == currentId: #process the sku parts
+        while len(splitSk) > 1 and splitSk[1] == currentId: #process the styles parts
             currentSKUS.append(splitSk[0])
-            lineSk = fpRSk.readline() #skus
+            lineSk = fpRSk.readline() #styles
             splitSk = lineSk.split(",")
         strSk = stringifyArr(currentSKUS)
         currentSKUS = []
-        while len(splitP) > 1 and splitP[1] == currentId: #process the photos parts
+        while len(splitP) > 1 and splitP[1] == currentId: #process the features parts
             currentPhotos.append(splitP[0])
-            lineP = fpRP.readline() #photos
+            lineP = fpRP.readline() #features
             splitP = lineP.split(",")
         strP = stringifyArr(currentPhotos)
         currentPhotos = []
         finalLine = checkStyle(lineSt) + ",\"" + strSk + "\",\"" + strP + "\"\n"
         fpW.write(finalLine)
         #print(finalLine)
-        lineSt = fpRSt.readline() #styles
-
+        lineSt = fpRSt.readline() #products
