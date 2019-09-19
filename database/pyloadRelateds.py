@@ -1,7 +1,7 @@
 import os 
 dir_path = os.path.dirname(os.path.realpath(__file__))
-filepathR = os.path.join(dir_path,'files/test.csv')
-filepathW = os.path.join(dir_path,'transforms/testNew.csv')
+filepathR = os.path.join(dir_path,'files/related.csv')
+filepathW = os.path.join(dir_path,'transforms/relatedTransformed.csv')
 #print(filepathR)
 
 
@@ -18,14 +18,14 @@ currentId = "1"
 with open(filepathR) as fpR, open(filepathW, "w") as fpW: #open the file to read and file to write to
     line = fpR.readline()
     fpW.write("product_id,relatedItems\n")
-    print("product_id,relatedItems")
+    #print("product_id,relatedItems")
     line = fpR.readline()
     while line: #loop line by line
         #print(line)
         split = line.split(",")
         if split[1] != currentId: #check if it's a new main product id
             fpW.write(currentId + ",\"" + stringifyArr(currentData) + "\"" + "\n")
-            print(currentId + ",\"" + stringifyArr(currentData) + "\"")
+            #print(currentId + ",\"" + stringifyArr(currentData) + "\"")
             currentId = split[1]
             currentData = []
         else:
@@ -33,7 +33,7 @@ with open(filepathR) as fpR, open(filepathW, "w") as fpW: #open the file to read
             currentData.append(related) 
         line = fpR.readline()
     fpW.write(currentId + ",\"" + stringifyArr(currentData) + "\"")
-    print(currentId + ",\"" + stringifyArr(currentData) + "\"")
+    #print(currentId + ",\"" + stringifyArr(currentData) + "\"")
 
 
 #print((data))
