@@ -11,11 +11,15 @@
     "build-dev": "webpack -d --mode development",
     "build-prod": "webpack -p --mode production",
     "load": "node database/fsloader.js",
-    "start": "node server/server.js"
+    "start": "nodemon server/server.js"
   },
   "dependencies": {
+    "bluebird": "^3.5.5",
     "csv": "^0.3.7",
     "express": "^4.17.1",
+    "nodemon": "^1.19.2",
+    "pg": "^7.12.1",
+    "pg-promise": "^9.1.4",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-hot-loader": "^4.12.11"
