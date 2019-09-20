@@ -41,15 +41,32 @@ app.get('/products/:product_id', (req, res) => {
             }
             Promise.all(fPromises)
                 .then(array => {
-                    console.log(array);
+                    let features = [];
+                    for (let i = 0; i < array.length; i++) {
+                        features.push({feature: array[i][0].feature, value: array[i][0].material});
+                    }
+                    mainData.features = features;
+                    delete mainData.styles;
                     res.statusCode = 200;
                     res.send(mainData);
                     let end = new Date().getTime();
-                    console.log(end-start)
+                    console.log(end-start , " milliseconds")
                 })
             
         })
 
+});
+
+app.get('/products/:product_id/related', (req, res) => {
+    let id = req.params.product_id;
+    let start = new Date().getTime();
+    db.any(`SELECT * FROM related WHERE product_id = ${id}`)
+        .then(data => {
+            res.statusCode = 200;
+            res.send(data[0].relateditems);
+            let end = new Date().getTime();
+            console.log(end-start , " milliseconds")
+        })
 });
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
