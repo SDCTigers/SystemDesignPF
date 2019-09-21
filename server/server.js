@@ -102,16 +102,24 @@ app.get('/products/:product_id/styles', (req, res) => {
             let styles = mainData.styles;
             let sPromises = [];
             for (let i = 0; i < styles.length; i++) {
-                sPromises.push(db.any(`SELECT * FROM styles WHERE id = ${styles[i]}`));
+                sPromises.push(db.any(`SELECT id as style_id, name, original_price, sale_price, default_style, skus, photos FROM styles WHERE id = ${styles[i]}`));
             }
             Promise.all(sPromises)
                 .then(array => {
                     let styles = [];
                     for (let i = 0; i < array.length; i++) {
-                        styles.push(array[i]);
+                        let style = array[i][0];
+                        if (style.sale_price === -1) {
+                            style.sale_price = 0;
+                        }
+                        style.sale_price = JSON.stringify(style.sale_price);
+                        style.original_price = JSON.stringify(style.original_price);
+                        style["default?"] = style.default_style;
+                        delete style.default_style;
+                        styles.push(style);
                     }
                     res.statusCode = 200;
-                    res.send(styles);
+                    res.send({product_id: id, results: styles});
                     let end = new Date().getTime();
                     console.log(end-start , " milliseconds")
                 })
