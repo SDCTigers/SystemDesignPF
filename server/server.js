@@ -105,26 +105,46 @@ app.get('/products/:product_id/styles', (req, res) => {
             let styles = mainData.styles;
             let sPromises = [];
             for (let i = 0; i < styles.length; i++) {
-                sPromises.push(db.any(`SELECT id as style_id, name, original_price, sale_price, default_style, skus, photos FROM styles WHERE id = ${styles[i]}`));
+                sPromises.push(db.any(`SELECT id as style_id, name, original_price, sale_price, default_style, photos, skus FROM styles WHERE id = ${styles[i]}`));
             }
             Promise.all(sPromises)
                 .then(array => {
                     let styles = [];
+                    let tPromises = [];
+                    let totalphotos = 0;
                     for (let i = 0; i < array.length; i++) {
                         let style = array[i][0];
-                        if (style.sale_price === -1) {
-                            style.sale_price = 0;
+                        for (let k = 0; k < style.photos.length; k++) {
+                            tPromises.push(db.any(`SELECT styleid, url, thumbnail_url FROM photos WHERE id = ${style.photos[k]}`));
+                            totalphotos++;
                         }
-                        style.sale_price = JSON.stringify(style.sale_price);
-                        style.original_price = JSON.stringify(style.original_price);
-                        style["default?"] = style.default_style;
-                        delete style.default_style;
-                        styles.push(style);
                     }
-                    res.statusCode = 200;
-                    res.send({product_id: id, results: styles});
-                    let end = new Date().getTime();
-                    console.log(end-start , " milliseconds")
+                    Promise.all(tPromises)
+                        .then(photosArr => {
+                            let startingStyle = array[0][0].style_id;
+                            console.log("start", startingStyle);
+                            for (let i = 0; i < array.length; i++) {
+                                let style = array[i][0];
+                                if (style.sale_price === -1) {
+                                    style.sale_price = 0;
+                                }
+                                style.sale_price = JSON.stringify(style.sale_price);
+                                style.original_price = JSON.stringify(style.original_price);
+                                style["default?"] = style.default_style;
+                                delete style.default_style;
+                                style.photos = [];
+                                styles.push(style);
+                            }
+                            for (let i = 0; i < photosArr.length; i++) {
+                                let photo = photosArr[i][0];
+                                let style = photo.styleid-startingStyle;
+                                styles[style].photos.push({thumbnail_url: photo.thumbnail_url, url: photo.url});
+                            }
+                            res.statusCode = 200;
+                            res.send({product_id: id, results: styles, photos: totalphotos});
+                            let end = new Date().getTime();
+                            console.log(end-start , " milliseconds")
+                        })
                 })
             
         })
