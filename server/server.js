@@ -43,7 +43,9 @@ app.get('/products/list', (req, res) => {
         .then(array => {
             results = []
             for (let i = 0; i < array.length; i++) {
-                results.push(array[i][0]);
+                let product = array[i][0];
+                product.default_price = JSON.stringify(product.default_price);
+                results.push(product);
             }
             res.statusCode = 200;
             res.send(results); 
@@ -70,6 +72,7 @@ app.get('/products/:product_id', (req, res) => {
                         features.push({feature: array[i][0].feature, value: array[i][0].material});
                     }
                     mainData.features = features;
+                    mainData.default_price = JSON.stringify(mainData.default_price);
                     delete mainData.styles;
                     res.statusCode = 200;
                     res.send(mainData);
