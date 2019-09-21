@@ -115,7 +115,7 @@ app.get('/products/:product_id/styles', (req, res) => {
                     for (let i = 0; i < array.length; i++) {
                         let style = array[i][0];
                         for (let k = 0; k < style.photos.length; k++) {
-                            tPromises.push(db.any(`SELECT styleid, url, thumbnail_url FROM photos WHERE id = ${style.photos[k]}`));
+                            tPromises.push(db.any(`SELECT id, styleid, url, thumbnail_url FROM photos WHERE id = ${style.photos[k]}`));
                             totalphotos++;
                         }
                     }
@@ -132,13 +132,16 @@ app.get('/products/:product_id/styles', (req, res) => {
                                 style.original_price = JSON.stringify(style.original_price);
                                 style["default?"] = style.default_style;
                                 delete style.default_style;
+                                delete style.photos;
                                 style.photos = [];
                                 styles.push(style);
                             }
                             for (let i = 0; i < photosArr.length; i++) {
                                 let photo = photosArr[i][0];
-                                let style = photo.styleid-startingStyle;
-                                styles[style].photos.push({thumbnail_url: photo.thumbnail_url, url: photo.url});
+                                if (photo !== undefined) {
+                                    let style = photo.styleid-startingStyle;
+                                    styles[style].photos.push({thumbnail_url: photo.thumbnail_url, url: photo.url});
+                                }
                             }
                             res.statusCode = 200;
                             res.send({product_id: id, results: styles, photos: totalphotos});
