@@ -7,19 +7,22 @@ const Promise = require("bluebird");
 const app = express()
 const port = 3000
 
-const URL = "postgres://postgres:student@localhost:5433/sdc"
-const pool ={
-    max: 10,
-    connectionString: URL
-};
-// const pool = {
-//   user: 'postgres',
-//   host: process.env.DB_HOST || '192.168.80.2',
-//   database: 'sdc',
-//   password: 'student',
-//   port: 5433,
-// }
+//const URL = `postgres//${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:5433/${process.env.DB_DB}`;
+
+//console.log("True port: ", URL);
+// const pool ={
+//     connectionString: "postgres://postgres:student@sdc_postgres:5433/sdc"
+// };
+const pool = {
+  user: process.env.DB_USER || 'postgres',
+  host: process.env.DB_HOST || 'localhost',
+  database: process.env.DB_DB || 'sdc',
+  password: process.env.DB_PASS || 'student',
+  port: 5433
+}
 const db = pgp(pool);
+console.log("this should be here");
+console.log("pool", pool);
 
 // app.use(express.static("./client/dist"));
 
@@ -35,7 +38,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/products/list', (req, res) => {
-    let time0 = new Date().getTime();
+    //let time0 = new Date().getTime();
     let page = req.query.page || 1;
     let count = req.query.count || 5;
     let start = (page-1)*count+1;
@@ -54,14 +57,19 @@ app.get('/products/list', (req, res) => {
             }
             res.statusCode = 200;
             res.send(results); 
-            let time1 = new Date().getTime();
-            console.log(time1-time0 , " milliseconds")
+            //let time1 = new Date().getTime();
+            //console.log(time1-time0 , " milliseconds")
+        })
+        .catch(err => {
+            console.log(err);
+            res.statusCode = 404;
+            res.send("error");
         })
 });
 
 app.get('/products/:product_id', (req, res) => {
     let id = req.params.product_id;
-    let start = new Date().getTime();
+    //let start = new Date().getTime();
     db.any(`SELECT * FROM product WHERE id = ${id}`)
         .then(results => {
             let mainData = results[0];
@@ -81,8 +89,8 @@ app.get('/products/:product_id', (req, res) => {
                     delete mainData.styles;
                     res.statusCode = 200;
                     res.send(mainData);
-                    let end = new Date().getTime();
-                    console.log(end-start , " milliseconds")
+                    //let end = new Date().getTime();
+                    //console.log(end-start , " milliseconds")
                 })
             
         })
@@ -91,19 +99,19 @@ app.get('/products/:product_id', (req, res) => {
 
 app.get('/products/:product_id/related', (req, res) => {
     let id = req.params.product_id;
-    let start = new Date().getTime();
+    //let start = new Date().getTime();
     db.any(`SELECT * FROM related WHERE product_id = ${id}`)
         .then(data => {
             res.statusCode = 200;
             res.send(data[0].relateditems);
-            let end = new Date().getTime();
-            console.log(end-start , " milliseconds")
+            // let end = new Date().getTime();
+            // console.log(end-start , " milliseconds")
         })
 });
 
 app.get('/products/:product_id/styles', (req, res) => {
     let id = req.params.product_id;
-    let start = new Date().getTime();
+    //let start = new Date().getTime();
     db.any(`SELECT * FROM product WHERE id = ${id}`)
         .then(results => {
             let mainData = results[0];
@@ -133,7 +141,7 @@ app.get('/products/:product_id/styles', (req, res) => {
                     Promise.all(tPromises)
                         .then(totalArr => {
                             let startingStyle = array[0][0].style_id;
-                            console.log("start", startingStyle);
+                            //console.log("start", startingStyle);
                             for (let i = 0; i < array.length; i++) {
                                 let style = array[i][0];
                                 if (style.sale_price === -1) {
@@ -163,8 +171,8 @@ app.get('/products/:product_id/styles', (req, res) => {
                             }
                             res.statusCode = 200;
                             res.send({product_id: id, results: styles});
-                            let end = new Date().getTime();
-                            console.log(end-start , " milliseconds")
+                            // let end = new Date().getTime();
+                            // console.log(end-start , " milliseconds")
                         })
                 })
             

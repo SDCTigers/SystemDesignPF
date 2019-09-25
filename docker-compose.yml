@@ -1,0 +1,47 @@
+version: '3.6'
+
+services:
+  postgres:
+    container_name: sdc_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: student
+      POSTGRES_DB: sdc
+    image: postgres:11.5
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile.db
+    expose:
+      - 5433
+    ports:
+      - 5433:5432
+    volumes:
+      - ./SDCDATA.sql:/docker-entrypoint-initdb.d/SDCDATA.sql
+  app:
+    container_name: sdc_server
+    build: .
+    depends_on:
+      - postgres
+    links: 
+      - postgres
+    environment:
+      # DATABASE_URL: postgres://postgres:student@sdc_postgres:5433/sdc
+      DB_HOST: host.docker.internal
+      DB_USER: postgres
+      DB_PASS: student
+      DB_DB: sdc
+      # PORT: 3000
+    ports:
+      - "3000:3000"
+    command: npm start
+    volumes:
+      - .:/app/
+      - /app/node_modules
+
+# volumes:
+#   pgdata:
+#     external: true
+#     name:
+#       product_vol
+
+  

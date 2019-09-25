@@ -5,3 +5,4 @@ database/files
 database/transforms
 database/tests
 .DS_Store
+SDCDATA.sql
