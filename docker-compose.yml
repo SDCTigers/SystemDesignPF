@@ -22,14 +22,13 @@ services:
     build: .
     depends_on:
       - postgres
-    links: 
-      - postgres
     environment:
       # DATABASE_URL: postgres://postgres:student@sdc_postgres:5433/sdc
       DB_HOST: host.docker.internal
       DB_USER: postgres
       DB_PASS: student
       DB_DB: sdc
+      NODE_ENV: development
       # PORT: 3000
     ports:
       - "3000:3000"

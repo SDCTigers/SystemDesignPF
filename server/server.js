@@ -22,7 +22,7 @@ const pool = {
 }
 const db = pgp(pool);
 console.log("pool", pool);
-
+console.log("test");
 // app.use(express.static("./client/dist"));
 
 // support parsing of application/json type post data
