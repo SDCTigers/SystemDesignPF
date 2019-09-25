@@ -21,7 +21,6 @@ const pool = {
   port: 5433
 }
 const db = pgp(pool);
-console.log("this should be here");
 console.log("pool", pool);
 
 // app.use(express.static("./client/dist"));
@@ -92,6 +91,11 @@ app.get('/products/:product_id', (req, res) => {
                     //let end = new Date().getTime();
                     //console.log(end-start , " milliseconds")
                 })
+                .catch(err => {
+                    console.log(err);
+                    res.statusCode = 404;
+                    res.send("error");
+                })
             
         })
 
@@ -106,6 +110,11 @@ app.get('/products/:product_id/related', (req, res) => {
             res.send(data[0].relateditems);
             // let end = new Date().getTime();
             // console.log(end-start , " milliseconds")
+        })
+        .catch(err => {
+            console.log(err);
+            res.statusCode = 404;
+            res.send("error");
         })
 });
 
@@ -174,6 +183,16 @@ app.get('/products/:product_id/styles', (req, res) => {
                             // let end = new Date().getTime();
                             // console.log(end-start , " milliseconds")
                         })
+                        .catch(err => {
+                            console.log(err);
+                            res.statusCode = 404;
+                            res.send("error");
+                        })
+                })
+                .catch(err => {
+                    console.log(err);
+                    res.statusCode = 404;
+                    res.send("error");
                 })
             
         })
