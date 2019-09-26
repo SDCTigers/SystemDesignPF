@@ -7,18 +7,13 @@ const Promise = require("bluebird");
 const app = express()
 const port = 3000
 
-//const URL = `postgres//${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:5433/${process.env.DB_DB}`;
-
-//console.log("True port: ", URL);
-// const pool ={
-//     connectionString: "postgres://postgres:student@sdc_postgres:5433/sdc"
-// };
 const pool = {
   user: process.env.DB_USER || 'postgres',
   host: process.env.DB_HOST || 'localhost',
+  //host: '172.29.0.3',
   database: process.env.DB_DB || 'sdc',
   password: process.env.DB_PASS || 'student',
-  port: 5433
+  port: 5432
 }
 const db = pgp(pool);
 console.log("pool", pool);
