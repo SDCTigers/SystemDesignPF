@@ -31,7 +31,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
     res.statusCode = 200;
-    res.send('Hello World!')
+    res.send('Hello World! This is through Kubernetes!')
 });
 
 app.get('/products/list', (req, res) => {
