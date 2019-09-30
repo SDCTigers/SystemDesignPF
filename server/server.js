@@ -31,7 +31,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
     res.statusCode = 200;
-    res.send('Hello World! This is through Kubernetes!')
+    res.send(`Hello World! This is through Kubernetes! \n User: ${pool.user} \n Host: ${pool.host} \n Database: ${pool.database}`)
 });
 
 app.get('/products/list', (req, res) => {
@@ -60,7 +60,7 @@ app.get('/products/list', (req, res) => {
         .catch(err => {
             console.log(err);
             res.statusCode = 404;
-            res.send("error");
+            res.send(err);
         })
 });
 
@@ -92,7 +92,7 @@ app.get('/products/:product_id', (req, res) => {
                 .catch(err => {
                     console.log(err);
                     res.statusCode = 404;
-                    res.send("error");
+                    res.send(err);
                 })
             
         })
@@ -112,7 +112,7 @@ app.get('/products/:product_id/related', (req, res) => {
         .catch(err => {
             console.log(err);
             res.statusCode = 404;
-            res.send("error");
+            res.send(err);
         })
 });
 
@@ -184,13 +184,13 @@ app.get('/products/:product_id/styles', (req, res) => {
                         .catch(err => {
                             console.log(err);
                             res.statusCode = 404;
-                            res.send("error");
+                            res.send(err);
                         })
                 })
                 .catch(err => {
                     console.log(err);
                     res.statusCode = 404;
-                    res.send("error");
+                    res.send(err);
                 })
             
         })
