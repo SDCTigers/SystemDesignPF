@@ -1,37 +1,4 @@
-# empty-project
+# Project-Greenfield Back-End
 
-Empty project.
+[Engineering Journal](https://drive.google.com/drive/folders/1t3_m-JYTa4xsQWjxDX-wQyhjpBDSqGjJ?usp=sharing)
 
-## Building and running on localhost
-
-First install dependencies:
-
-```sh
-npm install
-```
-
-To run in hot module reloading mode:
-
-```sh
-npm start
-```
-
-To create a production build:
-
-```sh
-npm run build-prod
-```
-
-To create a development build:
-
-```sh
-npm run build-dev
-```
-
-## Running
-
-Open the file `dist/index.html` in your browser
-
-## Credits
-
-Made with [createapp.dev](https://createapp.dev/)
